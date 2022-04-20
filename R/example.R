@@ -24,5 +24,5 @@ y = rbinom(n,1,1/(1+exp(-mu)))
 resu = backfitting_outer_loop(X,y,Fa,Fb,max_iter=1000,epsilon = 1e-8)
 cat("estimate of beta is ",resu$beta,"\n")
 cat("estimate of sigma a is ",resu$sigma_a,"\n")
-cat("estimate of sigma b is ",resu$sigma_b,"\n")
+cat("estimate of sigma b is ",resu$sigma_b)
 
