@@ -32,13 +32,13 @@ preclub=function(X,f,w,lambda){
   ## w n vector of weights
   ## f a factor variable of length n with k classes, stored as an integer
   ## lambda -shrinkage parameter
-  wX=w*X
-  wX=as_tibble(wX)
-  d=tibble(f,w,wX)
+  wX = w*X
+  wX = as_tibble(wX)
+  d = tibble(f,w,wX)
   pwsum = d %>%
     group_by(f) %>%
     summarize_all(sum,na.rm=TRUE)
-  pwsum=data.matrix(pwsum[,-1])
+  pwsum = data.matrix(pwsum[,-1])
   denom = drop(pwsum[,1]+lambda)
   Xbar = pwsum[,-1]/denom
   Xad = w*(X-Xbar[f,])
@@ -50,15 +50,15 @@ club = function(X,f,w,y,lambda,Xad=NULL){
   ## typically y is a residual
   ## if Xad is supplied, it has been precomputed
 
-  if(is.null(Xad))Xad=preclub(X,f,w,lambda)$operator
-  beta=drop(Xad%*%y)
-  wr=as_tibble(w*(y-drop(X%*%beta)))
-  d=tibble(f,w,wr)
-  pwsum=d %>%
+  if(is.null(Xad))Xad = preclub(X,f,w,lambda)$operator
+  beta = drop(Xad%*%y)
+  wr = as_tibble(w*(y-drop(X%*%beta)))
+  d = tibble(f,w,wr)
+  pwsum = d %>%
     group_by(f) %>%
     summarize_all(sum,na.rm=TRUE)
-  pwsum=data.matrix(pwsum[,-1])
-  b=pwsum[,-1]/drop(pwsum[,1]+lambda)
+  pwsum = data.matrix(pwsum[,-1])
+  b  = pwsum[,-1]/drop(pwsum[,1]+lambda)
   return(list(beta=beta,coef=b))
 }
 
