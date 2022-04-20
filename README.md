@@ -36,7 +36,7 @@ y = rbinom(n,1,1/(1+exp(-mu)))
 
 We use clubbed backfitting with default starting values.
 ```r
-resu=backfitting_outer_loop(X,y,Fa,Fb)
+resu = backfitting_outer_loop(X,y,Fa,Fb)
 cat("estimate of beta is ",resu$beta,"\n")
 cat("estimate of sigma a is ",resu$sigma_a,"\n")
 cat("estimate of sigma b is ",resu$sigma_b)
