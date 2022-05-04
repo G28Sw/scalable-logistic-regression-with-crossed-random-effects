@@ -53,12 +53,15 @@ sigma_a = .8
 sigma_b = .4
 intercept = -2
 Upsilon_upper_lim = 1.2716
-beta = c(-2,rep(0,7))#-2+0.5*0:7#
-niter_time = 1
 autocorr.mat <- function(p = 7, autocorr = 0.5){
   mat <- diag(p)
   return(rho^abs(row(mat)-col(mat)))
 }
+
+beta = c(-2,rep(0,7))
+
+#Here we consider the first choice of beta made in page 16. 
+#For the second choice change beta to -2+0.5*0:7 
 
 #------------------------------------------------------------------------------------
 ## The following is a function to simulate the observation pattern $Z$ according to mechanism
@@ -70,6 +73,8 @@ autocorr.mat <- function(p = 7, autocorr = 0.5){
 
 
 get_estimates<-function(S_list = 10^seq(3,5.5,0.25), rho = 0.56, kappa = 0.56, beta = c(-2,rep(0,7)), sigma_a = 0.8, sigma_b=0.4, niter = 100, n_list_glmer_len = 7, p = 7, Upsilon_upper_lim = 1.2716, autocorr = 0.5){
+
+  #define lists to store the results
 
   schall_backfit = list()
   var_schall = list()
@@ -129,7 +134,7 @@ get_estimates<-function(S_list = 10^seq(3,5.5,0.25), rho = 0.56, kappa = 0.56, b
 
       set.seed((4*i)+kl+1)
 
-
+      #generate Z, X, random effects and then the binary response from a crossed random effect model
       for (ik in 1:nf1){
         for(jk in 1:nf2){
           Upsilon=runif(1,1,Upsilon_upper_lim)
@@ -169,6 +174,9 @@ get_estimates<-function(S_list = 10^seq(3,5.5,0.25), rho = 0.56, kappa = 0.56, b
       prob = 1/(1+exp(-eta))
       y = rbinom(n,1,prob)
 
+
+      #get estimates using plain logistic regression
+
       start_time_logistic_glm = Sys.time()
       logistic_model = glm(y~-1+x,family="binomial")
       logistic_glm_coef[[i]][[kl]] = coef(logistic_model)
@@ -177,6 +185,8 @@ get_estimates<-function(S_list = 10^seq(3,5.5,0.25), rho = 0.56, kappa = 0.56, b
       time_logistic_glm[[i]][[kl]] = difftime(end_time_logistic_glm,start_time_logistic_glm,units = "secs")
 
 
+
+      #get estimates using clubbed backfitting
 
 
       start_time_schall_backfit = Sys.time()
@@ -195,6 +205,8 @@ get_estimates<-function(S_list = 10^seq(3,5.5,0.25), rho = 0.56, kappa = 0.56, b
 
       f1_factor = as.factor(f1)
       f2_factor = as.factor(f2)
+
+      #get estimates using glmer from lme4 for small problem size
 
 
       if(i<=n_list_glmer_len){
@@ -224,11 +236,11 @@ get_estimates<-function(S_list = 10^seq(3,5.5,0.25), rho = 0.56, kappa = 0.56, b
   return(list(problem_size = S_list, logistic_coef = logistic_glm_coef, logistic_time = time_logistic_glm,schall_backfit = schall_backfit, schall_cov = var_schall, schall_backfit_time = time_schall_backfit, schall_cov_time = time_schall_cov, glmer_fixef = glmm_glmer_fixef, glmer_sigma = glmm_glmer_sigma, glmer_iter = glmm_glmer_outer_iter, glmer_time = time_glmm_glmer, glmer_nAGQ_0_fixef = glmm_glmer_nAGQ_0_fixef, glmer_nAGQ_0_sigma = glmm_glmer_nAGQ_0_sigma, glmer_iter_nAGQ_0 = glmm_glmer_nAGQ_0_outer_iter, glmer_time_nAGQ_0 = time_glmm_glmer_nAGQ_0, n_list = n_list))
 }
 
-results_mse = get_estimates(S_list, rho, kappa, beta, sigma_a, sigma_b, niter, n_list_glmer_len, p, Upsilon_upper_lim, autocorr)
-
 #-----------------------------------------------------------------------------------------
 ## Next, we obtain the estimates and find the MSE based on the estimates and known parameter. ##
 #----------------------------------------------------------------------------------------
+
+results_mse = get_estimates(S_list, rho, kappa, beta, sigma_a, sigma_b, niter, n_list_glmer_len, p, Upsilon_upper_lim, autocorr)
 
 
 logistic_coef_matrix = matrix(unlist(results_mse$logistic_coef),ncol=p+1,byrow=TRUE)
@@ -269,7 +281,7 @@ glmer_nAGQ_0_mse = glmer_nAGQ_0_residual %>%
   dplyr::summarize(across(everything(), ~sum(.x^2)/n()))
 
 #-----------------------------------------------------------------------------------------
-## Now, we plot the MSE. ##
+## Now, we plot the MSE. The following generates the two plots in figure 2 of section 5
 #----------------------------------------------------------------------------------------
 
 s = -1
