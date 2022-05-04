@@ -281,7 +281,8 @@ glmer_nAGQ_0_mse = glmer_nAGQ_0_residual %>%
   dplyr::summarize(across(everything(), ~sum(.x^2)/n()))
 
 #-----------------------------------------------------------------------------------------
-## Now, we plot the MSE. The following generates the two plots in figure 2 of section 5
+## Now, we plot the MSE. The following generates the two plots in figure 2 of section 5. 
+# One may obtain figure 3 by changing beta in line 61 of this code.
 #----------------------------------------------------------------------------------------
 
 s = -1
