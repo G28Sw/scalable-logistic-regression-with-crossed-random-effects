@@ -2,7 +2,7 @@
 
 The cost of both generalized least squares (GLS) and Gibbs sampling in a crossed random effects model is superlinear in N, the number of observations. Ghosh et al. (2021) developed a backfitting algorithm that reduces the cost to O(N). Here we extend that method to a generalized linear mixed model for logistic regression. This is based on adaptation of penalized quasi-likelihood algorithm of Schall(1991) using clubbed backfitting.
 
-This repository contains codes for the article: "Scalable logistic regression with crossed random effects". The R script "accuracy_simulation_results_reproducing.R" reproduces the figures 2 and 3.
+This repository contains codes for the article: "Scalable logistic regression with crossed random effects". The R script "accuracy_simulation_results_reproducing.R" reproduces the figures in page 21 and 22.
 
 The article link: https://arxiv.org/abs/2105.13747
 
