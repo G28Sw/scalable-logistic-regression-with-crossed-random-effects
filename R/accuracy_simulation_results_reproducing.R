@@ -1,4 +1,4 @@
-## Simulation example for scalable logistic regression with crossed random effect
+## Simulation example for scalable logistic regression with crossed random effect. The following reproduces the accuracy results in page 21 and 22.
 
 
 #------------------------------------------------------------------------------------
